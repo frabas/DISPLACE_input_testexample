@@ -497,10 +497,10 @@ headings: node name
 
 /benthosspe_*/estimates_biomass_per_cell_per_funcgr_per_landscape.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: Give a piece of the habitat specific total biomass on each node 
+fields: landscape (habitat) code / biomass (free unit)
+separators: ' '
+headings: landscape biomass_per_node
 
 
 ===================
@@ -509,24 +509,26 @@ headings:
 
 /shipsspe_*/shipsspe_features.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose:  Gathering all the commercial ships specifications
+fields: SHIP1|1000000|2006|Greece|Tanker|1|250|30000|45|60000|0|200|9|0.1|0.2|0|20|10|1
+separators: '|' 
+headings: No
+
 
 /shipsspe_*/shipsspe_lanes_lat.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: lat coordinates of the shipping lanes
+fields: ship lane id / value (double)
+separators: ' '
+headings: ship_lane_number lat_dec
+
 
 /shipsspe_*/shipsspe_lanes_lon.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: lon coordinates of the shipping lanes
+fields: ship lane id / value (double) 
+separators: ' '
+headings: ship_lane_number lon_dec
 
 
 
@@ -536,10 +538,10 @@ headings:
 
 /fishfarmsspe_*/size_per_farm.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: size per farm specifications (WIP)
+fields: node id / value (double)
+separators: ' '
+headings: idx_node size_km2
 
 
 
@@ -549,50 +551,50 @@ headings:
 
 /simusspe_*/baseline.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: describing the high level parameters for a scenario
+fields: parsing # for comments
+separators: No
+headings: No
 
 /simusspe_*/config.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: Describing parameters for enable/unable implicit populations and/or calibration features
+fields: parsing # for comments
+separators: No
+headings: No
 
 /simusspe_*/tstep_days_2009_2015.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: To build a calendar class and ease the time event discretisation
+fields:one column with tsteps - -1 as sentinel value
+separators: No
+headings: No
 
 /simusspe_*/tstep_months_2009_2015.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: To build a calendar class and ease the time event discretisation
+fields: one column with tsteps - -1 as sentinel value
+separators: No
+headings: No
 
 /simusspe_*/tstep_quarters_2009_2015.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose:To build a calendar class and ease the time event discretisation
+fields: one column with tsteps - -1 as sentinel value
+separators: No
+headings: No
 
 /simusspe_*/tstep_semesters_2009_2015.dat
 
-purpose:
-fields: 
-separators:
-headings:
+purpose: To build a calendar class and ease the time event discretisation
+fields: one column with tsteps - -1 as sentinel value
+separators: No
+headings: No
 
 /simusspe_*/tstep_years_2009_2015.dat
 
-purpose:
-fields: 
+purpose: To build a calendar class and ease the time event discretisation
+fields: one column with tsteps - -1 as sentinel value
 separators:
 headings:
 
@@ -605,7 +607,7 @@ headings:
 
 /timeseries/ts.txt
 
-purpose:
+purpose: empty file for the testexample
 fields: 
 separators:
 headings:
@@ -617,7 +619,7 @@ headings:
 
 /timeseries/empty.txt
 
-purpose:
+purpose: empty file for the testexample
 fields: 
 separators:
 headings:
@@ -631,7 +633,7 @@ headings:
 /dtrees/GoFishing_Example.dt
 
 
-purpose:
+purpose: Example of file to input the dtree editor
 fields: 
 separators:
 headings:
@@ -643,14 +645,14 @@ headings:
 
 /shortPaths_*_a_graph*/previous_*.bin
 
-purpose:
+purpose: Files for offline path finding algo
 fields: 
 separators:
 headings:
 
 /shortPaths_*_a_graph*/min_distance_*.bin
 
-purpose:
+purpose: Files for offline path finding algo
 fields: 
 separators:
 headings:
