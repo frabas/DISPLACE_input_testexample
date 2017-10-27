@@ -4,15 +4,19 @@
 2
 # implicit stocks
 
+# grouped tacs
+1 1
 # calib the other landings per stock
 1 1
 # calib weight-at-szgroup per stock
 1 1
 # calib the cpue multiplier per stock
 1 1
-# interesting harbours
+# Interesting harbours
 
 # implicit stocks level 2
 
 # grouped TACs groups
 1 1
+
+
