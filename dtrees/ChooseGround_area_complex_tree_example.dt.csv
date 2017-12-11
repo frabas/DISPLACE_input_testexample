@@ -1,4 +1,4 @@
-#TreeVersion: 6
+#TreeVersion: 7
 #TreeType: ChooseGround
 # id,variable,posx,posy,nchld,children...,value
 0,isInAreaClosure,2560,2302,2,1,0,2,1,0
