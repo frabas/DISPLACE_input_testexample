@@ -22,6 +22,7 @@ if(length(args)==0){
  general <- list()
 
  general$application           <- "testexample"
+ print(general$application)
 
  if(.Platform$OS.type == "unix") {
   general$main_path         <- file.path("~","ibm_vessels",paste("DISPLACE_input_", general$application, sep=''))

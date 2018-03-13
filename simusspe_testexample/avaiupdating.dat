@@ -9,7 +9,7 @@ baseline avai_updater_on
 # Frequency to apply growth (0:daily; 1:weekly; 2:monthly; 3:quarterly; 4:semester)
 3
 # Frequency to redispatch the pop (0:daily; 1:weekly; 2:monthly; 3:quarterly; 4:semester)
-2
+0
 # a_graph
 56
 # nrow_coord
