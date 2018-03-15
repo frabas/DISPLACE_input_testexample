@@ -11,7 +11,7 @@
 if(length(args)==0){
     print("No arguments supplied to input2avaiupdater.r Take pop 0 and tstep 0 and sce baseline and simu simu2")
  pop   <-0
- tstep <-0
+ tstep <-745
  sce   <- "avaiupdating"
  sim   <- "simu2"
  igraph <- 56
@@ -29,7 +29,8 @@ if(length(args)==0){
 
  general$application           <- "testexample"
  general$igraph                <- igraph
- print(general$application)
+ 
+ print(paste("In the interactiverscripts for", general$application))
 
  if(.Platform$OS.type == "unix") {
   general$main_path         <- file.path("~","ibm_vessels",paste("DISPLACE_input_", general$application, sep=''))
@@ -78,15 +79,23 @@ if(length(args)==0){
   # 2. Use output text file:
   filename <- file.path(general$output_path,  sce,
          paste("vmslikefpingsonly_", sim,".dat", sep=''))
-  suppressWarnings(
-   obj <- read.table(filename, sep=" ", header=FALSE)
-   )
+  #suppressWarnings(
+  # obj <- read.table(filename, sep=" ", header=FALSE)
+  # )
+  # to load faster, replace by: 
+  library(data.table)
+  obj <-  fread(filename, sep=" ", header=FALSE, fill=TRUE)  
+  # fill at TRUE will complement the incomplete row (likely the last one in our case...)
+             
+     
    
+ print(paste("loading vmslikefpingsonly_xx.dat...ok"))
+
   #x <-count.fields(filename, sep=" ", skip=2)
   #incorrect <- which(x != 23)
   
   obj <- obj[,1:23]
-  colnames (obj) <-  c("tstep","Survey","start_trip_tstep","ShootLon","ShootLat","course","cumfuelcons","state",
+  colnames (obj) <-  c("tstep","Survey","start_trip_tstep","ShootLon","ShootLat","nodeid", "course","cumfuelcons",
                        "StockId","nb_indiv.0","nb_indiv.1","nb_indiv.2","nb_indiv.3","nb_indiv.4","nb_indiv.5",
                        "nb_indiv.6","nb_indiv.7","nb_indiv.8","nb_indiv.9",
                        "nb_indiv.10","nb_indiv.11","nb_indiv.12","nb_indiv.13")
@@ -96,19 +105,32 @@ if(length(args)==0){
      obj$Year <- "2015"
      obj$Stock <- "a_stock"
   
-  # keep the last three months info only  
-  obj <- obj[as.numeric(as.character(obj$start_trip_tstep)) > (as.numeric(as.character(tstep)) - (745*3)),]  
+  # keep the last month(s) info only  
+  obj <- obj[as.numeric(as.character(obj$start_trip_tstep)) > (as.numeric(as.character(tstep)) - (745*1)),]  
     
   idx_zeros <- which( apply(obj[,paste("nb_indiv.", 0:13, sep="")], 1, sum) ==0) 
   obj <- obj[-idx_zeros, ] # assume 0s like absence of targetting, then get rid of them 
   obj <- obj[complete.cases(obj), ] # debug for c++
 
+  #if(FALSE){
+  #plot(obj$ShootLon, obj$ShootLat)
+  #points(obj[obj$StockId==10,]$ShootLon, obj[obj$StockId==10,]$ShootLat, col=2)
+  #points(obj[obj$StockId==11,]$ShootLon, obj[obj$StockId==11,]$ShootLat, col=3)
+  #}
   
- # because we lack of info on smaller fish, retireve from the existing...
+  #dd <- obj[obj$StockId==10 & obj$ShootLon>16 ,] # should return 0 line 
+  
+  print(paste("formatting from catches...ok"))
+ 
+  
+ # because we lack of info on smaller fish using catches only, retrieve from the existing...
+ if(TRUE){
  obj <- obj[,c("Survey", "Year", "ShootLon", "ShootLat", "Stock", "StockId", paste("nb_indiv.", 0:13, sep=""))]  
 
- coord <- read.table(file=file.path(general$main_path, "graphsspe",
-             paste("coord", general$igraph, ".dat", sep=""))) # build from the c++ gui
+ #coord <- read.table(file=file.path(general$main_path, "graphsspe",
+ #            paste("coord", general$igraph, ".dat", sep=""))) # build from the c++ gui
+ coord <-  fread(file=file.path(general$main_path, "graphsspe",
+             paste("coord", general$igraph, ".dat", sep="")), sep=" ", header=FALSE, fill=TRUE)  
  coord <- as.matrix(as.vector(coord))
  coord <- matrix(coord, ncol=3)
  coord <- cbind(coord, 1:nrow(coord))
@@ -117,7 +139,8 @@ if(length(args)==0){
  for (st in unique(obj$StockId)){
       a_semester <- ceiling(as.numeric(tstep) / 4382 ) %% 2
       existing_avai_this_sp <- read.table(file.path(general$main_path, paste("popsspe_", general$application, sep=''), 
-                                  "static_avai", paste(st, "spe_full_avai_szgroup_nodes_semester",a_semester,".dat", sep="")),
+                                  "static_avai", 
+                                  paste(st, "spe_full_avai_szgroup_nodes_semester",a_semester,".dat", sep="")),
                                    sep=" ", header=TRUE)
       existing  <- cbind(unique(existing_avai_this_sp[,1]), matrix(existing_avai_this_sp[,-1], ncol=14, byrow=T)) # reshape in wide
       existing_non_null_small_fish <- existing [existing[,2] >1e-5 & existing[,3] >1e-5, ]
@@ -126,17 +149,22 @@ if(length(args)==0){
                        "nb_indiv.6","nb_indiv.7","nb_indiv.8","nb_indiv.9",
                        "nb_indiv.10","nb_indiv.11","nb_indiv.12","nb_indiv.13")
       
-      obj <- rbind.data.frame (obj, 
-               cbind.data.frame(Survey="existing", Year="2015",
-                                ShootLon=coord[existing_non_null_small_fish[,"pt_graph"], "x"],
-                                ShootLat=coord[existing_non_null_small_fish[,"pt_graph"], "y"], 
+
+      obj2 <- cbind.data.frame(Survey="existing", Year="2015",
+                                ShootLon=coord[existing_non_null_small_fish[,"pt_graph"]+1, "x"],
+                                ShootLat=coord[existing_non_null_small_fish[,"pt_graph"]+1, "y"], 
                                 Stock="a_stock", StockId=st,
-                                existing_non_null_small_fish[,-1]
+                                existing_non_null_small_fish[,-1] *10000 # ...and scale up to get comparable values....
                                 )
-               )
+      #if(FALSE){        
+      #plot(obj2$ShootLon, obj2$ShootLat)
+      #points(obj2[obj2$StockId==10,]$ShootLon, obj2[obj2$StockId==10,]$ShootLat, col=2)
+      #}
+
+    obj <- rbind.data.frame (obj, obj2 )
   }
 
-
+  } # end FALSE
 
 
   # TO DO:
