@@ -1,7 +1,7 @@
 # dyn_alloc_sce
-baseline focus_on_high_profit_grounds
+baseline focus_on_high_profit_grounds TACs FMSY fishing_credits
 # dyn_pop_sce
-baseline diffuseN TACs FMSY
+baseline
 # biolsce
 1
 # fleetsce
@@ -27,7 +27,7 @@ baseline diffuseN TACs FMSY
 # Go Fishing DTree
 GoFishing_Example.dt.csv
 # Choose Ground DTree
-
+ChooseGround_area_complex_tree_example.dt.csv
 # Start Fishing DTree
 
 # Change Ground DTree
@@ -39,14 +39,14 @@ GoFishing_Example.dt.csv
 # Use Dtrees
 1
 #tariff_pop
-
-#req_update_tariff_code
-
+0 1
+#req_update_tariff_code (0: daily, 1: weekly, 2: monthly)
+1
 #arbitrary_breaks_for_tariff
-
+-1 0.1 0.5 1 2 5 100000
 #total_amount_credited
-
-#tariff_annual_
-
+100000
+#tariff_annual_ (percent change in HCR)
+10
 # banned metiers
 
